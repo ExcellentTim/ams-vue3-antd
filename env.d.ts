@@ -8,7 +8,6 @@ declare module '*.vue' {
 
 interface Window {
   readonly PKG: Record<string, string>;
-  process: any;
 }
 
 declare module 'lodash-es';

@@ -1,7 +1,11 @@
 <template>
   <div style="margin-right: 12px">
     <a-space>
-      <!-- <a style="padding: 0 12px; display: inline-block; user-select: none" @click="handleClick"><BgColorsOutlined /></a> -->
+      <!-- <a
+        style="padding: 0 12px; display: inline-block; user-select: none"
+        @click="handleClick"
+        ><BgColorsOutlined
+      /></a> -->
       <a-dropdown>
         <template #overlay>
           <a-menu>
@@ -9,7 +13,9 @@
               <!-- <template #icon>
                 <SettingOutlined />
               </template> -->
-              <router-link :to="{ path: '/classes/page-2' }">&#x3000;账号信息&#x3000;</router-link>
+              <router-link :to="{ path: '/account' }"
+                >&#x3000;账号信息&#x3000;</router-link
+              >
             </a-menu-item>
             <a-menu-item>
               <!-- <template #icon>
@@ -33,22 +39,32 @@
 </template>
 
 <script setup lang="ts">
-import { UserOutlined, SettingOutlined, LogoutOutlined, BgColorsOutlined } from '@ant-design/icons-vue';
-import { apply, randomTheme } from '@/hooks/useTheme';
-import { useUserStore } from "@/store/modules/user"
+import { createVNode } from 'vue';
+import { UserOutlined, ExclamationCircleFilled } from '@ant-design/icons-vue';
+// import { apply, randomTheme } from '@/hooks/useTheme';
+import { useUserStore } from '@/store/modules/user';
 import { RouterLink } from 'vue-router';
-
+import { Modal } from 'ant-design-vue';
 
 defineProps<{
   currentUser: API.AdminUserInfo;
 }>();
 
-const store = useUserStore()
+const store = useUserStore();
 
 const handleLogout = () => {
-  store.logout()
-}
-const handleClick = () => {
-  apply(randomTheme());
+  Modal.confirm({
+    title: '确定要退出登录吗？',
+    icon: createVNode(ExclamationCircleFilled),
+    cancelText: '再看看',
+    okText: '确定',
+    centered: true,
+    onOk() {
+      store.logout();
+    }
+  });
 };
+// const handleClick = () => {
+//   apply(randomTheme());
+// };
 </script>

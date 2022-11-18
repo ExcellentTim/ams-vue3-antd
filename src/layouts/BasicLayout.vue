@@ -12,9 +12,11 @@
     v-bind="proConfig"
   >
     <template #menuHeaderRender>
-      <router-link :to="{ path: '/' }">
-        <img src="https://alicdn.antdv.com/v2/assets/logo.1ef800a8.svg" />
-        <h1>Preview Pro</h1>
+      <router-link class="logo_box" :to="{ path: '/' }">
+        <img v-if="state.collapsed" src="~@/assets/favicon.ico" />
+        <img v-else src="~@/assets/logo.png" />
+        <!-- <img src="https://alicdn.antdv.com/v2/assets/logo.1ef800a8.svg" />
+        <h1>Preview Pro</h1> -->
       </router-link>
     </template>
     <template #rightContentRender>
@@ -39,7 +41,12 @@
 
 <script setup lang="ts">
 import { useRouter, RouterView, RouterLink } from 'vue-router';
-import { getMenuData, clearMenuItem, type RouteContextProps, type MenuDataItem } from '@ant-design-vue/pro-layout';
+import {
+  getMenuData,
+  clearMenuItem,
+  type RouteContextProps,
+  type MenuDataItem
+} from '@ant-design-vue/pro-layout';
 import { useUserStore } from '@/store/modules/user';
 
 const userStore = useUserStore();
@@ -51,7 +58,7 @@ const { menuData } = getMenuData(clearMenuItem(router.getRoutes()));
 const state = reactive<Omit<RouteContextProps, 'menuData'>>({
   collapsed: false, // default collapsed
   openKeys: [], // defualt openKeys
-  selectedKeys: [], // default selectedKeys
+  selectedKeys: [] // default selectedKeys
 });
 const loading = ref(false);
 const proConfig = ref({
@@ -59,26 +66,40 @@ const proConfig = ref({
   navTheme: 'light',
   fixedHeader: true,
   fixSiderbar: true,
-  splitMenus: true,
+  splitMenus: true
 });
 const breadcrumb = computed(() =>
   router.currentRoute.value.matched.concat().map(item => {
     return {
       path: item.path,
-      breadcrumbName: item.meta.title || '',
+      breadcrumbName: item.meta.title || ''
     };
-  }),
+  })
 );
 
 watch(
   router.currentRoute,
   () => {
     const matched = router.currentRoute.value.matched.concat();
-    state.selectedKeys = matched.filter(r => r.name !== 'index').map(r => r.path);
-    state.openKeys = matched.filter(r => r.path !== router.currentRoute.value.path).map(r => r.path);
+    state.selectedKeys = matched
+      .filter(r => r.name !== 'index')
+      .map(r => r.path);
+    state.openKeys = matched
+      .filter(r => r.path !== router.currentRoute.value.path)
+      .map(r => r.path);
   },
   {
-    immediate: true,
-  },
+    immediate: true
+  }
 );
 </script>
+
+<style lang="less" scoped>
+.logo_box {
+  width: 100%;
+  img {
+    width: 140px;
+    height: 38px;
+  }
+}
+</style>

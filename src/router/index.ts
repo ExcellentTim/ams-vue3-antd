@@ -21,10 +21,16 @@ const router = createRouter({
             {
               path: 'list',
               name: 'curriculum_list',
-              meta: { title: '课程列表' }, //hideInMenu: true
-              component: () => import('@/views/curriculum/List.vue'),
+              meta: { title: '课程列表' },
+              component: () => import('@/views/curriculum/List.vue')
             },
-          ],
+            {
+              path: 'detail/:id',
+              name: 'curriculum_detail',
+              meta: { title: '课程详情', params: { id: 1 }, hideInMenu: true },
+              component: () => import('@/views/curriculum/Detail.vue')
+            }
+          ]
         },
         {
           path: '/classes',
@@ -36,28 +42,27 @@ const router = createRouter({
             {
               path: 'list',
               name: 'classes_list',
-              meta: { title: '班级列表' }, //hideInMenu: true
-              component: () => import('@/views/classes/PageInfo.vue'),
-            },
-            {
-              path: 'page-2',
-              name: 'page2',
-              meta: { title: '二级页面', hideInMenu: true },
-              component: () => import('@/views/classes/PageTypography.vue'),
+              meta: { title: '班级列表' },
+              component: () => import('@/views/classes/PageInfo.vue')
             },
             {
               path: 'dynamic-match/:id(\\d+)',
               name: 'dynamic-match',
-              // 路由 path 默认参数再 meta.params 里
               meta: { title: '动态参数页面', params: { id: 1 } },
-              component: () => import('@/views/classes/DynamicMatch.vue'),
-            },
-          ],
+              component: () => import('@/views/classes/DynamicMatch.vue')
+            }
+          ]
         },
-      ],
+        {
+          path: '/account',
+          name: 'account',
+          meta: { title: '账号信息', hideInMenu: true },
+          component: () => import('@/views/account/Index.vue')
+        }
+      ]
     },
-    { path: '/:pathMatch(.*)*', name: 'NotFound', redirect: '/' },
-  ],
+    { path: '/:pathMatch(.*)*', name: 'NotFound', redirect: '/' }
+  ]
 });
 
 export default router;

@@ -18,13 +18,32 @@ useUserTheme();
   font-family: PingFangSC-Regular, PingFang SC;
 }
 
+// antd ------
+
 .ant-pro-sider {
   z-index: 20;
 }
 
-.ant-btn{
+.ant-btn {
   border-radius: 4px;
 }
+
+.ant-pro-page-container-children-content {
+  background-color: #ffffff;
+}
+
+.ant-menu-sub.ant-menu-inline {
+  background-color: #ffffff;
+}
+// ------
+
+// 自定义------
+
+.container-title-btn {
+  width: 118px;
+}
+
+// ------
 
 .slide-left-enter-active,
 .slide-left-leave-active,

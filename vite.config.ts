@@ -19,10 +19,10 @@ export default defineConfig(() => {
       proxy: {
         '/api': {
           target: 'https://api.mofa.eliteu.xyz',
-          changeOrigin: true,
+          changeOrigin: true
           // rewrite:(path)=>path.replace(/^\/api/,"")
-        },
-      },
+        }
+      }
     },
     plugins: [
       vue(),
@@ -34,8 +34,8 @@ export default defineConfig(() => {
         eslintrc: {
           enabled: true,
           filepath: './.eslintrc-auto-import.json',
-          globalsPropValue: true,
-        },
+          globalsPropValue: true
+        }
       }),
       Components({
         dts: 'src/components.d.ts',
@@ -44,20 +44,20 @@ export default defineConfig(() => {
         extensions: ['vue', 'tsx'],
         resolvers: [
           AntDesignVueResolver({
-            importStyle: false,
-          }),
-        ],
+            importStyle: false
+          })
+        ]
       }),
       PkgConfig(),
       OptimizationPersist(),
       lifecycle === 'report'
         ? visualizer({ open: true, brotliSize: true, filename: 'report.html' })
-        : null,
+        : null
     ],
     resolve: {
       alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-      },
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
     },
     css: {
       preprocessorOptions: {
@@ -67,12 +67,12 @@ export default defineConfig(() => {
           modifyVars: {
             // hack: `true; @import 'ant-design-vue/dist/antd.variable.less'`,
             // '@primary-color': '#eb2f96', // 全局主色
-          },
-        },
-      },
+          }
+        }
+      }
     },
     optimizeDeps: {
-      include: ['@ant-design/icons-vue', 'ant-design-vue'],
-    },
+      include: ['@ant-design/icons-vue', 'ant-design-vue']
+    }
   };
 });
