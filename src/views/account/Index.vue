@@ -1,107 +1,425 @@
 <template>
-  <a-card>
-    <a-typography>
-      <a-typography-title>Introduction</a-typography-title>
-      <a-typography-paragraph>
-        In the process of internal desktop applications development, many
-        different design specs and implementations would be involved, which
-        might cause designers and developers difficulties and duplication and
-        reduce the efficiency of development.
-      </a-typography-paragraph>
-      <a-typography-paragraph>
-        After massive project practice and summaries, Ant Design, a design
-        language for background applications, is refined by Ant UED Team, which
-        aims to
-        <a-typography-text strong>
-          uniform the user interface specs for internal background projects,
-          lower the unnecessary cost of design differences and implementation
-          and liberate the resources of design and front-end development.
-        </a-typography-text>
-      </a-typography-paragraph>
-      <a-typography-title :level="2"
-        >Guidelines and Resources</a-typography-title
-      >
-      <a-typography-paragraph>
-        We supply a series of design principles, practical patterns and high
-        quality design resources (
-        <a-typography-text code>Sketch</a-typography-text>
-        and
-        <a-typography-text code>Axure</a-typography-text>
-        ), to help people create their product prototypes beautifully and
-        efficiently.
-      </a-typography-paragraph>
+  <div class="account_container" ref="accountContainer">
+    <div class="basic_box">
+      <div class="account_title">基础信息</div>
+      <div>
+        <a-form
+          :model="state.basicData"
+          name="basic_detail"
+          @finish="onFinish"
+          :hideRequiredMark="true"
+          v-bind="formItemLayout"
+          autocomplete="off"
+        >
+          <div class="avatar_form_item">
+            <a-form-item label="头像">
+              <a-upload
+                name="avatar"
+                :before-upload="beforeUpload"
+                :showUploadList="false"
+                accept=".jpg, .jpeg, .png"
+                :action="`/api/v1/users/${userInfo.username}/`"
+                :headers="headers"
+                method="PATCH"
+              >
+                <a-avatar
+                  class="upload_box"
+                  :size="62"
+                  :src="
+                    userInfo.avatar_url ? userInfo.avatar_url : default_avatar
+                  "
+                >
+                </a-avatar>
+              </a-upload>
+            </a-form-item>
+          </div>
 
-      <a-typography-paragraph>
-        <ul>
-          <li>
-            <a-typography-link href="/docs/resources"
-              >Resource Download</a-typography-link
-            >
-          </li>
-        </ul>
-      </a-typography-paragraph>
-
-      <a-typography-paragraph>
-        Press
-        <a-typography-text keyboard>Esc</a-typography-text>
-        to exit...
-      </a-typography-paragraph>
-
-      <a-divider />
-
-      <a-typography-title>介绍</a-typography-title>
-      <a-typography-paragraph>
-        蚂蚁的企业级产品是一个庞大且复杂的体系。这类产品不仅量级巨大且功能复杂，而且变动和并发频繁，常常需要设计与开发能够快速的做出响应。同时这类产品中有存在很多类似的页面以及组件，可以通过抽象得到一些稳定且高复用性的内容。
-      </a-typography-paragraph>
-      <a-typography-paragraph>
-        随着商业化的趋势，越来越多的企业级产品对更好的用户体验有了进一步的要求。带着这样的一个终极目标，我们（蚂蚁金服体验技术部）经过大量的项目实践和总结，逐步打磨出一个服务于企业级产品的设计体系
-        Ant Design。基于
-        <a-typography-text mark>『确定』和『自然』</a-typography-text>
-        的设计价值观，通过模块化的解决方案，降低冗余的生产成本，让设计者专注于
-        <a-typography-text strong>更好的用户体验</a-typography-text>
-        。
-      </a-typography-paragraph>
-      <a-typography-title :level="2">设计资源</a-typography-title>
-      <a-typography-paragraph>
-        我们提供完善的设计原则、最佳实践和设计资源文件（
-        <a-typography-text code>Sketch</a-typography-text>
-        和
-        <a-typography-text code>Axure</a-typography-text>
-        ），来帮助业务快速设计出高质量的产品原型。
-      </a-typography-paragraph>
-
-      <a-typography-paragraph>
-        <ul>
-          <li>
-            <a-typography-link href="/docs/resources-cn"
-              >设计资源</a-typography-link
-            >
-          </li>
-        </ul>
-      </a-typography-paragraph>
-
-      <a-typography-paragraph>
-        <blockquote>{{ blockContent }}</blockquote>
-        <pre>{{ blockContent }}</pre>
-      </a-typography-paragraph>
-
-      <a-typography-paragraph>
-        按
-        <a-typography-text keyboard>Esc</a-typography-text>
-        键退出阅读……
-      </a-typography-paragraph>
-    </a-typography>
-  </a-card>
+          <a-form-item
+            v-if="state.nickNameOpen"
+            label="昵称"
+            name="nickName"
+            :wrapperCol="{ span: 10 }"
+            :rules="[{ required: true, message: '请输入昵称' }]"
+            :extra="state.nickNameOpen && '20 个字以内，支持中英文、数字'"
+          >
+            <div class="label_box">
+              <a-input
+                class="nickname_input"
+                v-model:value="state.basicData.nickName"
+                placeholder="请输入昵称"
+                :maxlength="20"
+              ></a-input>
+              <div>
+                <a-space>
+                  <a-button @click="cancelEditNickname">取消</a-button>
+                  <a-button
+                    :disabled="!state.basicData.nickName"
+                    type="primary"
+                    html-type="submit"
+                    >保存</a-button
+                  >
+                </a-space>
+              </div>
+            </div>
+          </a-form-item>
+          <a-form-item label="昵称" v-else>
+            <div class="label_box">
+              <div>{{ state.basicData.nickName }}</div>
+              <a @click="handleEditModal('nickNameOpen')">修改</a>
+            </div>
+          </a-form-item>
+          <a-form-item label="性别">
+            <span>{{ userInfo.name }}</span>
+          </a-form-item>
+          <a-form-item label="所属组织">
+            <span>{{ userInfo.name }}</span>
+          </a-form-item>
+          <span class="basic_tip"
+            >&emsp;&ensp;如「性别」「所属组织」信息有误，请联系管理员修改。</span
+          >
+        </a-form>
+      </div>
+    </div>
+    <div class="security_box">
+      <div class="account_title">账号安全</div>
+      <div>
+        <a-form
+          name="security_detail"
+          v-bind="formItemLayout"
+          autocomplete="off"
+        >
+          <a-form-item label="手机号">
+            <div class="label_box">
+              <div>{{ userInfo.name }}</div>
+              <a @click="handleEditModal('phone')">更换</a>
+            </div>
+          </a-form-item>
+          <a-form-item label="登录密码">
+            <div class="label_box">
+              <div>已设置</div>
+              <a @click="handleEditModal('password')">修改</a>
+            </div>
+          </a-form-item>
+          <a-form-item label="邮箱">
+            <div class="label_box">
+              <div>{{ userInfo.name }}@163.com</div>
+              <a @click="handleEditModal('email')">更换</a>
+            </div>
+          </a-form-item>
+        </a-form>
+      </div>
+    </div>
+    <a-modal
+      :visible="state.phoneEmail"
+      @ok="handleAccountform"
+      :getContainer="() => accountContainer"
+      :width="539"
+      centered
+      :closable="false"
+      :destroyOnClose="true"
+      @cancel="handleEditModal(state.editType)"
+    >
+      <div class="modal_box">
+        <div class="modal_title">
+          {{ phoneEmailMsg[state.editType].title }}
+        </div>
+        <a-form
+          ref="formRef"
+          :model="state.formState"
+          name="form_phone_modal"
+          autocomplete="off"
+          :label-col="{ span: 5 }"
+        >
+          <a-form-item
+            :name="state.editType"
+            :label="phoneEmailMsg[state.editType].label"
+            :rules="phoneEmailMsg[state.editType].rules"
+          >
+            <a-input
+              v-model:value="state.formState[state.editType]"
+              :placeholder="phoneEmailMsg[state.editType].placeholder"
+            />
+          </a-form-item>
+          <a-form-item
+            label="验证码"
+            name="captcha"
+            :rules="[{ required: true, message: '请输入验证码' }]"
+          >
+            <a-row :gutter="8">
+              <a-col flex="3">
+                <a-input
+                  placeholder="请输入验证码"
+                  v-model:value="state.formState['captcha']"
+                />
+              </a-col>
+              <a-col flex="2">
+                <a-button
+                  :disabled="state.captchaData.disabled"
+                  class="captcha_btn"
+                  type="primary"
+                  @click="handleCaptcha"
+                >
+                  {{ state.captchaData.text }}
+                </a-button>
+              </a-col>
+            </a-row>
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
+    <a-modal
+      :visible="state.password"
+      @ok="handleAccountform"
+      :getContainer="() => accountContainer"
+      :width="539"
+      centered
+      :closable="false"
+      :destroyOnClose="true"
+      @cancel="handleEditModal('password')"
+    >
+      <div class="modal_box">
+        <div class="modal_title">您正在修改用于登录「ams」的密码</div>
+        <a-form
+          ref="formRef"
+          :model="state.formState"
+          name="form_password_modal"
+          autocomplete="off"
+          :label-col="{ span: 6 }"
+        >
+          <a-form-item
+            name="oldPassword"
+            label="原密码"
+            :rules="[{ required: true, message: '请输入原密码' }]"
+          >
+            <a-input-password
+              v-model:value="state.formState['oldPassword']"
+              placeholder="请输入原密码"
+            />
+          </a-form-item>
+          <a-form-item
+            name="password"
+            label="新密码"
+            :rules="[{ required: true, message: '请输入新密码' }]"
+          >
+            <a-input-password
+              v-model:value="state.formState['password']"
+              placeholder="请输入新密码"
+            />
+          </a-form-item>
+          <a-form-item
+            name="passwordConfirm"
+            label="确认密码"
+            :rules="[{ required: true, message: '请输入确认密码' }]"
+          >
+            <a-input-password
+              v-model:value="state.formState['passwordConfirm']"
+              placeholder="请输入确认密码"
+            />
+          </a-form-item>
+        </a-form>
+      </div>
+    </a-modal>
+  </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import { useUserStore } from '@/store/modules/user';
+import default_avatar from '@/assets/images/user/default_avatar.png';
+import { message, UploadProps } from 'ant-design-vue';
+import type { FormInstance } from 'ant-design-vue';
+import { Storage, ACCESS_TOKEN } from '@/utils/Storage';
+const userStore = useUserStore();
+const userInfo = computed(() => userStore.getInfo);
+const formItemLayout = { labelCol: { span: 2 }, wrapperCol: { span: 7 } };
+const headers = {
+  Authorization: `JWT ${Storage.get(ACCESS_TOKEN)}`
+};
+const phoneEmailMsg = {
+  phone: {
+    title: '您正在更换用于登录「ams」的手机号码',
+    label: '新手机',
+    url: '',
+    rules: [{ required: true, message: '请输入手机号' }],
+    placeholder: '请输入手机号'
+  },
+  email: {
+    title: userStore.userInfo.username ? '您正在更换邮箱' : '您正在绑定邮箱',
+    label: '新邮箱',
+    url: '',
+    rules: [{ required: true, message: '请输入邮箱' }],
+    placeholder: '请输入邮箱'
+  }
+};
 
-export default defineComponent({
-  setup() {
-    return {
-      blockContent: `AntV 是蚂蚁金服全新一代数据可视化解决方案，致力于提供一套简单方便、专业可靠、不限可能的数据可视化最佳实践。得益于丰富的业务场景和用户需求挑战，AntV 经历多年积累与不断打磨，已支撑整个阿里集团内外 20000+ 业务系统，通过了日均千万级 UV 产品的严苛考验。
-我们正在基础图表，图分析，图编辑，地理空间可视化，智能可视化等各个可视化的领域耕耘，欢迎同路人一起前行。`
-    };
+const accountContainer = ref();
+const state = reactive({
+  basicData: { nickName: userStore.userInfo.username },
+  nickNameOpen: false,
+  phoneEmail: false,
+  password: false,
+  editType: '',
+  formState: {
+    phone: '',
+    email: '',
+    oldPassword: '',
+    password: '',
+    passwordConfirm: '',
+    captcha: ''
+  },
+  captchaData: {
+    second: 0,
+    disabled: false,
+    text: '获取验证码'
   }
 });
+
+const formRef = ref<FormInstance>();
+// 上传前检查资源
+const beforeUpload = (file: UploadProps['fileList'][number]) => {
+  const fileType = ['image/png', 'image/jpeg', 'image/bmp'];
+  const type = file.type;
+  if (fileType.indexOf(type) === -1) {
+    message.error('请选择 .jpeg/.png/.bmp 格式的图片');
+    return false;
+  } else {
+    const isLt20M = file.size / 1024 / 1024 > 100;
+    if (isLt20M) {
+      message.error('请选择小于 100 MB 的图片');
+      return false;
+    }
+    return true;
+  }
+};
+
+// 控制弹窗
+const handleEditModal = type => {
+  if (type === 'nickNameOpen') {
+    state.basicData.nickName = userStore.userInfo.username;
+  }
+
+  if (type === 'phone' || type === 'email') {
+    state.phoneEmail = !state.phoneEmail;
+  } else {
+    state[type] = !state[type];
+  }
+
+  state.editType = type;
+  state.formState = {
+    phone: '',
+    email: '',
+    oldPassword: '',
+    password: '',
+    passwordConfirm: '',
+    captcha: ''
+  };
+  state.captchaData.second = 66;
+};
+
+const cancelEditNickname = () => {
+  handleEditModal('nickNameOpen');
+};
+
+// 提交昵称
+const onFinish = async (values: any) => {
+  await userStore.updateUserInfo(values);
+  handleEditModal('nickNameOpen');
+};
+
+watch(
+  () => state.captchaData.second,
+  (newValue, oldValue) => {
+    if (newValue < 0) {
+      state.captchaData.disabled = false;
+      state.captchaData.text = '重新获取';
+    } else if (newValue >= 60) {
+      state.captchaData.disabled = false;
+      state.captchaData.text = '获取验证码';
+    } else {
+      state.captchaData.disabled = true;
+      state.captchaData.text = `${newValue}s 后重新获取`;
+      setTimeout(() => {
+        state.captchaData.second--;
+      }, 1000);
+    }
+  }
+);
+
+// 获取验证码
+const handleCaptcha = () => {
+  state.captchaData.second = 59;
+};
+
+// 提交手机号或邮箱
+const handleAccountform = async () => {
+  try {
+    const values = await formRef.value.validateFields();
+    console.log('handlePhoneOk', values);
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
+
+<style lang="less" scoped>
+.account_container {
+  margin: 28px;
+  background-color: #ffffff;
+  padding: 48px;
+  .account_title {
+    border-left: 4px solid #0084ff;
+    padding-left: 5px;
+    line-height: 1;
+    font-size: 22px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #2e313c;
+    margin-bottom: 30px;
+  }
+  .label_box {
+    display: flex;
+    justify-content: space-between;
+    .nickname_input {
+      width: 306px;
+    }
+  }
+  .basic_box {
+    margin-bottom: 40px;
+    .basic_tip {
+      color: #999999;
+    }
+    .upload_box {
+      cursor: pointer;
+      &:hover::before {
+        content: '更换头像';
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.3);
+        width: 100%;
+        height: 100%;
+        left: 0;
+        font-size: 14px;
+        color: #ffffff;
+      }
+    }
+    .avatar_form_item {
+      :deep(.ant-form-item-label) {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+      }
+    }
+  }
+  .modal_box {
+    padding: 30px 46px 0;
+    .modal_title {
+      text-align: center;
+      font-size: 22px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #2e313c;
+      margin-bottom: 40px;
+    }
+    .captcha_btn {
+      width: 123px;
+    }
+  }
+}
+</style>

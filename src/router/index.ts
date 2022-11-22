@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { BasicLayout, BlankLayout } from '@/layouts';
-import { user, hotel } from '@/core/icons';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -15,7 +14,7 @@ const router = createRouter({
         {
           path: '/curriculum',
           name: 'curriculum',
-          meta: { title: '课程管理', icon: user },
+          meta: { title: '课程管理', icon: 'icon-Livebroadcast' },
           redirect: () => ({ name: 'curriculum_list' }),
           children: [
             {
@@ -27,7 +26,11 @@ const router = createRouter({
             {
               path: 'detail/:id',
               name: 'curriculum_detail',
-              meta: { title: '课程详情', params: { id: 1 }, hideInMenu: true },
+              meta: {
+                title: '课程列表',
+                params: { id: 1 },
+                hideInMenu: true
+              },
               component: () => import('@/views/curriculum/Detail.vue')
             }
           ]
@@ -35,7 +38,7 @@ const router = createRouter({
         {
           path: '/classes',
           name: 'classes',
-          meta: { title: '班级管理', icon: hotel, flat: true },
+          meta: { title: '班级管理', icon: 'icon-data2' },
           component: BlankLayout,
           redirect: () => ({ name: 'classes_list' }),
           children: [
@@ -43,13 +46,7 @@ const router = createRouter({
               path: 'list',
               name: 'classes_list',
               meta: { title: '班级列表' },
-              component: () => import('@/views/classes/PageInfo.vue')
-            },
-            {
-              path: 'dynamic-match/:id(\\d+)',
-              name: 'dynamic-match',
-              meta: { title: '动态参数页面', params: { id: 1 } },
-              component: () => import('@/views/classes/DynamicMatch.vue')
+              component: () => import('@/views/classes/List.vue')
             }
           ]
         },

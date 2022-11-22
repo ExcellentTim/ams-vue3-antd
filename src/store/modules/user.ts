@@ -9,17 +9,21 @@ interface UserState {
 export const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
-    userInfo: {},
+    userInfo: {}
   }),
-  getters: {},
+  getters: {
+    getInfo: state => {
+      return state.userInfo;
+    }
+  },
   actions: {
-    /** 清空token及用户信息 */
+    /** 退出登录清空token及用户信息 */
     logout() {
       this.userInfo = {};
       Storage.clear();
       location.href = '/';
     },
-    async afterLogin() {
+    async saveUserInfo() {
       try {
         const res = await getUserInfo();
         if (res.code === 19995) {
@@ -31,7 +35,19 @@ export const useUserStore = defineStore({
         return Promise.reject(error);
       }
     },
-  },
+    async updateUserInfo(data) {
+      try {
+        const res = await getUserInfo();
+        if (res.code === 19995) {
+          return Promise.reject({ res });
+        }
+        this.userInfo = { ...res.user, username: '123' };
+        return { res };
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+  }
 });
 
 // 在组件setup函数外使用

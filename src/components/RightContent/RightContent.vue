@@ -31,7 +31,7 @@
               <UserOutlined />
             </template>
           </a-avatar>
-          {{ currentUser.name }}
+          {{ props.currentUser.name }}
         </div>
       </a-dropdown>
     </a-space>
@@ -46,10 +46,9 @@ import { useUserStore } from '@/store/modules/user';
 import { RouterLink } from 'vue-router';
 import { Modal } from 'ant-design-vue';
 
-defineProps<{
-  currentUser: API.AdminUserInfo;
+const props = defineProps<{
+  currentUser: API.UserNameInfo;
 }>();
-
 const store = useUserStore();
 
 const handleLogout = () => {

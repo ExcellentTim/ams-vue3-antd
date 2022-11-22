@@ -13,12 +13,16 @@ router.beforeEach(async (to, _, next) => {
     if (to.name === LOGIN_NAME) {
       next({ path: '/' });
     } else {
-      const [err] = await _to(store.afterLogin());
-
-      if (err) {
-        store.logout();
-      } else {
+      if (Object.keys(store.userInfo).length) {
         next();
+      } else {
+        const [err] = await _to(store.saveUserInfo());
+
+        if (err) {
+          store.logout();
+        } else {
+          next();
+        }
       }
     }
   } else {
@@ -30,9 +34,10 @@ router.beforeEach(async (to, _, next) => {
         {
           path: LOGIN_NAME,
           name: LOGIN_NAME,
-          component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login.vue'),
-        },
-      ],
+          component: () =>
+            import(/* webpackChunkName: "user" */ '@/views/user/Login.vue')
+        }
+      ]
     });
     if (whiteList.indexOf(to.path) !== -1) {
       next();

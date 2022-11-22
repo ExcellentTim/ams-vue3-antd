@@ -63,7 +63,6 @@ const onSubmit = async () => {
   try {
     const data = await validate();
     const res = await userLogin(data);
-    console.log('res', res);
     if (res.token) {
       Storage.set(ACCESS_TOKEN, res.token);
       location.href = '/';

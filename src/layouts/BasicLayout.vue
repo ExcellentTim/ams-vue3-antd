@@ -8,15 +8,13 @@
     :breadcrumb="{ routes: breadcrumb }"
     disable-content-margin
     style="min-height: 100vh"
-    iconfont-url="//at.alicdn.com/t/font_2804900_2sp8hxw3ln8.js"
+    iconfont-url="//at.alicdn.com/t/c/font_1365073_y0odjvsv9nq.js"
     v-bind="proConfig"
   >
     <template #menuHeaderRender>
       <router-link class="logo_box" :to="{ path: '/' }">
         <img v-if="state.collapsed" src="~@/assets/favicon.ico" />
         <img v-else src="~@/assets/logo.png" />
-        <!-- <img src="https://alicdn.antdv.com/v2/assets/logo.1ef800a8.svg" />
-        <h1>Preview Pro</h1> -->
       </router-link>
     </template>
     <template #rightContentRender>
