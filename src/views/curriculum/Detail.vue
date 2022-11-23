@@ -134,7 +134,7 @@ const router = useRouter();
 const typeTitle = {
   add: '新增课程',
   info: '课程详情',
-  edit: '编辑课程'
+  edit: '课程编辑'
 };
 let oldFormState = {};
 const state = reactive({

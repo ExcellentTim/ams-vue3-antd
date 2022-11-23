@@ -60,6 +60,10 @@ useUserTheme();
   height: 40px;
 }
 
+.light_color {
+  color: #999999;
+}
+
 .move_active {
   cursor: pointer;
   &:hover {

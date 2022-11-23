@@ -11,9 +11,10 @@
         <div>
           状态：
           <a-radio-group v-model:value="state.status" button-style="solid">
-            <a-radio-button value="1">全部</a-radio-button>
-            <a-radio-button value="2">未开班</a-radio-button>
-            <a-radio-button value="3">开班中</a-radio-button>
+            <a-radio-button :value="-1">全部</a-radio-button>
+            <a-radio-button v-for="item in statusList" :value="item.id">
+              {{ item.title }}
+            </a-radio-button>
             <a-radio-button value="4">已结束</a-radio-button>
           </a-radio-group>
         </div>
@@ -37,6 +38,11 @@
                 {{ record.class_name }}
               </div>
             </template>
+            <template v-if="column.key === 'status'">
+              <div>
+                {{ statusList.filter(el => el.id === record.status)[0].title }}
+              </div>
+            </template>
             <template v-if="column.key === 'action'">
               <a>删除</a>
             </template>
@@ -57,9 +63,25 @@ import { getClassesList } from '@/api/classes/list';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
+
+const statusList = [
+  {
+    id: 1,
+    title: '未开班'
+  },
+  {
+    id: 2,
+    title: '开班中'
+  },
+  {
+    id: 3,
+    title: '已结束'
+  }
+];
 
 const state = reactive({
-  status: '1',
+  status: -1,
   lookme: false,
   dataSource: []
 });
@@ -69,7 +91,14 @@ onMounted(async () => {
   state.dataSource = res.results;
 });
 
-const handletapDetail = (type, id) => {};
+const handletapDetail = (type, id = 1) => {
+  router.push({
+    name: 'classes_detail',
+    params: { id },
+    query: { type }
+  });
+};
+
 const columns = [
   {
     title: '班级名称',

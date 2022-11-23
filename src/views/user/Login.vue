@@ -4,7 +4,7 @@
       <div><img src="~@/assets/logo.png" width="200" /></div>
       <div class="title">AI 魔法家管理平台</div>
       <div class="form_box">
-        <a-form name="basic" @finish="onSubmit">
+        <a-form name="basic">
           <a-form-item v-bind="validateInfos.phone">
             <a-input
               v-model:value="modelRef.phone"

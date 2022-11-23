@@ -10,11 +10,10 @@
         <div>
           状态：
           <a-radio-group v-model:value="state.status" button-style="solid">
-            <a-radio-button value="1">全部</a-radio-button>
-            <a-radio-button value="2">待开播</a-radio-button>
-            <a-radio-button value="3">开播中</a-radio-button>
-            <a-radio-button value="4">已结束</a-radio-button>
-            <a-radio-button value="5">已取消</a-radio-button>
+            <a-radio-button :value="-1">全部</a-radio-button>
+            <a-radio-button v-for="item in statusList" :value="item.id">
+              {{ item.title }}
+            </a-radio-button>
           </a-radio-group>
         </div>
         <div>
@@ -62,6 +61,11 @@
                 {{ record.curriculum_name }}
               </div>
             </template>
+            <template v-if="column.key === 'status'">
+              <div>
+                {{ statusList.filter(el => el.id === record.status)[0].title }}
+              </div>
+            </template>
             <template v-if="column.key === 'action'">
               <a>删除</a>
             </template>
@@ -85,8 +89,27 @@ type RangeValue = [Dayjs, Dayjs];
 
 const route = useRoute();
 const router = useRouter();
+
+const statusList = [
+  {
+    id: 1,
+    title: '待开播'
+  },
+  {
+    id: 2,
+    title: '开播中'
+  },
+  {
+    id: 3,
+    title: '已结束'
+  },
+  {
+    id: 4,
+    title: '已取消'
+  }
+];
 const state = reactive({
-  status: '1',
+  status: -1,
   lookme: false,
   classes: -1,
   classesList: [{ id: 1 }],
@@ -97,6 +120,7 @@ const state = reactive({
 onMounted(async () => {
   const res = await getCurriculumList();
   state.dataSource = res.results;
+  // console.log();
 });
 
 const handletapDetail = (type, id = 1) => {

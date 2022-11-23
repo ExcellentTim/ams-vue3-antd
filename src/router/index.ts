@@ -47,6 +47,16 @@ const router = createRouter({
               name: 'classes_list',
               meta: { title: '班级列表' },
               component: () => import('@/views/classes/List.vue')
+            },
+            {
+              path: 'detail/:id',
+              name: 'classes_detail',
+              meta: {
+                title: '班级列表',
+                params: { id: 1 },
+                hideInMenu: true
+              },
+              component: () => import('@/views/classes/Detail.vue')
             }
           ]
         },

@@ -7,7 +7,7 @@ export function getCurriculumList() {
       {
         id: 1,
         curriculum_name: '胡彦斌',
-        status: 32,
+        status: 1,
         live_time: '2022-10-18 14:00~2022-10-18 15:00',
         live_teacher: '123',
         classes: '123',
@@ -17,7 +17,7 @@ export function getCurriculumList() {
       {
         id: 2,
         curriculum_name: '胡彦斌',
-        status: 32,
+        status: 2,
         live_time: '2022-10-18 14:00~2022-10-18 15:00',
         live_teacher: '123',
         classes: '123',
